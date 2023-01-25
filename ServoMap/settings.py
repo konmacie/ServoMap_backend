@@ -148,3 +148,9 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'Access-Control-Allow-Credentials',
 ]
+
+
+MIN_LATITUDE = env('MIN_LATITUDE', default='-90.00')
+MAX_LATITUDE = env('MIN_LATITUDE', default='90.00')
+MIN_LONGITUDE = env('MIN_LATITUDE', default='-180.00')
+MAX_LONGITUDE = env('MIN_LATITUDE', default='180.00')
