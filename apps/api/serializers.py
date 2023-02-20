@@ -12,3 +12,11 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = '__all__'
+
+
+class LocationDetailsSerializer(serializers.ModelSerializer):
+    type = LocationTypeSerializer(read_only=True)
+
+    class Meta:
+        model = Location
+        fields = '__all__'

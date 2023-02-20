@@ -2,7 +2,8 @@ from django.shortcuts import render
 from rest_framework import generics
 
 from apps.locations.models import LocationType, Location
-from .serializers import LocationTypeSerializer, LocationSerializer
+from .serializers import (LocationTypeSerializer,
+                          LocationSerializer, LocationDetailsSerializer)
 from .filters import LocationFilter
 
 
@@ -20,4 +21,4 @@ class LocationListAPIView(generics.ListAPIView):
 
 class LocationRetrieveAPIView(generics.RetrieveAPIView):
     queryset = Location.objects.all()
-    serializer_class = LocationSerializer
+    serializer_class = LocationDetailsSerializer
