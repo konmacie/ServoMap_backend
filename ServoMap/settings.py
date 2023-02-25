@@ -18,7 +18,13 @@ from corsheaders.defaults import default_headers
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables
-env = environ.Env()
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, True),
+    SESSION_COOKIE_SECURE=(bool, False),
+    CSRF_COOKIE_SECURE=(bool, False),
+    )
+
 environ.Env.read_env(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
@@ -134,8 +140,8 @@ AUTH_USER_MODEL = 'accounts.User'
 
 
 # Cookies settings
-SESSION_COOKIE_SECURE = env('SESSION_COOKIE_SECURE', default=False)
-CSRF_COOKIE_SECURE = env('CSRF_COOKIE_SECURE', default=False)
+SESSION_COOKIE_SECURE = env('SESSION_COOKIE_SECURE')
+CSRF_COOKIE_SECURE = env('CSRF_COOKIE_SECURE')
 
 
 CORS_ALLOWED_ORIGINS = [
