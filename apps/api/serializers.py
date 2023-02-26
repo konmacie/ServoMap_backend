@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.locations.models import Location, LocationType
+from apps.locations.models import Location, LocationType, Report
 
 
 class LocationTypeSerializer(serializers.ModelSerializer):
@@ -20,3 +20,10 @@ class LocationDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = '__all__'
+
+
+class ReportCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Report
+        fields = ('user', 'location', 'message')
