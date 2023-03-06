@@ -1,15 +1,14 @@
 from django.shortcuts import render
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import generics
 
 from apps.locations.models import LocationType, Location
-from .serializers import (LocationTypeSerializer, LocationSerializer,
-                          LocationDetailsSerializer, ReportCreateSerializer)
-from .filters import LocationFilter
+from apps.api.serializers.locations import (
+    LocationTypeSerializer, LocationSerializer, LocationDetailsSerializer,
+    ReportCreateSerializer
+)
+from apps.api.filters import LocationFilter
 
 
-@method_decorator(ensure_csrf_cookie, name='dispatch')
 class LocationTypeListAPIView(generics.ListAPIView):
     queryset = LocationType.objects.all()
     serializer_class = LocationTypeSerializer

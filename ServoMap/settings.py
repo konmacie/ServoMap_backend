@@ -23,7 +23,7 @@ env = environ.Env(
     DEBUG=(bool, True),
     SESSION_COOKIE_SECURE=(bool, False),
     CSRF_COOKIE_SECURE=(bool, False),
-    )
+)
 
 environ.Env.read_env(BASE_DIR / '.env')
 
@@ -142,6 +142,8 @@ AUTH_USER_MODEL = 'accounts.User'
 # Cookies settings
 SESSION_COOKIE_SECURE = env('SESSION_COOKIE_SECURE')
 CSRF_COOKIE_SECURE = env('CSRF_COOKIE_SECURE')
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:4200']
 
 
 CORS_ALLOWED_ORIGINS = [
