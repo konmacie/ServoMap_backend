@@ -1,9 +1,12 @@
-from django.shortcuts import render
-from rest_framework import generics
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, status
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from apps.locations.models import LocationType, Location
 from apps.api.serializers.locations import (
-    LocationTypeSerializer, LocationSerializer, LocationDetailsSerializer,
+    LocationTypeSerializer, LocationShortSerializer, LocationDetailsSerializer,
     ReportCreateSerializer
 )
 from apps.api.filters import LocationFilter
@@ -17,7 +20,7 @@ class LocationTypeListAPIView(generics.ListAPIView):
 
 class LocationListAPIView(generics.ListAPIView):
     queryset = Location.objects.all()
-    serializer_class = LocationSerializer
+    serializer_class = LocationShortSerializer
     filterset_class = LocationFilter
 
 
@@ -34,3 +37,29 @@ class ReportCreateAPIView(generics.CreateAPIView):
             serializer.save(user=self.request.user)
         else:
             serializer.save()
+
+
+class FavouriteLocationAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        location = get_object_or_404(
+            Location, pk=kwargs.get('pk'))
+        if request.user not in location.favourite.all():
+            location.favourite.add(request.user)
+            return Response(status=status.HTTP_200_OK)
+        return Response(
+            {'details': "Location already favourited."},
+            status.HTTP_400_BAD_REQUEST
+        )
+
+    def delete(self, request, *args, **kwargs):
+        location = get_object_or_404(
+            Location, pk=kwargs.get('pk'))
+        if request.user in location.favourite.all():
+            location.favourite.remove(request.user)
+            return Response(status=status.HTTP_200_OK)
+        return Response(
+            {'details': "Location not in favourites."},
+            status.HTTP_400_BAD_REQUEST
+        )

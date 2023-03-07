@@ -53,6 +53,11 @@ class Location(models.Model):
         blank=True,
     )
 
+    favourite = models.ManyToManyField(
+        to=settings.AUTH_USER_MODEL,
+        related_name="favourites",
+    )
+
     class Meta:
         verbose_name = _("Location")
         verbose_name_plural = _("Locations")

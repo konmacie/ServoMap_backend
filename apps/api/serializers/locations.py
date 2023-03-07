@@ -8,18 +8,28 @@ class LocationTypeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class LocationSerializer(serializers.ModelSerializer):
+class LocationShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = '__all__'
+        fields = ['id', 'name', 'type', 'latitude', 'longitude']
 
 
 class LocationDetailsSerializer(serializers.ModelSerializer):
     type = LocationTypeSerializer(read_only=True)
+    favourited = serializers.SerializerMethodField()
+
+    def get_favourited(self, obj):
+        favourited = False
+        request = self.context['request']
+        if request and request.user.is_authenticated:
+            user = request.user
+            favourited = obj.favourite.filter(pk=user.pk).exists()
+        return favourited
 
     class Meta:
         model = Location
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ['favourite']
 
 
 class ReportCreateSerializer(serializers.ModelSerializer):
