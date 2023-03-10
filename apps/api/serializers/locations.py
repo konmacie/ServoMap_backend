@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.locations.models import Location, LocationType, Report
+from apps.locations.models import Location, LocationType, Report, CustomPin
 
 
 class LocationTypeSerializer(serializers.ModelSerializer):
