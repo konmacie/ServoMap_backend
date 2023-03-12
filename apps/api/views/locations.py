@@ -1,3 +1,4 @@
+from django.db.models import Avg, Count
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -27,6 +28,13 @@ class LocationListAPIView(generics.ListAPIView):
 class LocationRetrieveAPIView(generics.RetrieveAPIView):
     queryset = Location.objects.all()
     serializer_class = LocationDetailsSerializer
+
+    def get_queryset(self):
+        qs = Location.objects.annotate(
+            rating_avg=Avg('reviews__rating'),
+            reviews_count=Count('reviews')
+        )
+        return qs
 
 
 class ReportCreateAPIView(generics.CreateAPIView):

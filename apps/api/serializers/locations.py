@@ -18,6 +18,11 @@ class LocationDetailsSerializer(serializers.ModelSerializer):
     type = LocationTypeSerializer(read_only=True)
     favourited = serializers.SerializerMethodField()
 
+    rating_avg = serializers.DecimalField(
+        max_digits=3, decimal_places=2, read_only=True)
+
+    reviews_count = serializers.IntegerField(read_only=True)
+
     def get_favourited(self, obj):
         favourited = False
         request = self.context['request']
