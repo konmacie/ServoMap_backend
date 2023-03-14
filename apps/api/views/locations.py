@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from apps.locations.models import LocationType, Location
 from apps.api.serializers.locations import (
     LocationTypeSerializer, LocationShortSerializer, LocationDetailsSerializer,
-    ReportCreateSerializer
 )
 from apps.api.filters import LocationFilter
 
@@ -35,16 +34,6 @@ class LocationRetrieveAPIView(generics.RetrieveAPIView):
             reviews_count=Count('reviews')
         )
         return qs
-
-
-class ReportCreateAPIView(generics.CreateAPIView):
-    serializer_class = ReportCreateSerializer
-
-    def perform_create(self, serializer):
-        if (self.request.user.is_authenticated):
-            serializer.save(user=self.request.user)
-        else:
-            serializer.save()
 
 
 class FavouriteLocationAPIView(APIView):

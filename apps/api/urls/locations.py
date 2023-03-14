@@ -7,5 +7,4 @@ urlpatterns = [
     path('details/<pk>/', location_views.LocationRetrieveAPIView.as_view()),
     path('details/<pk>/favourite/',
          location_views.FavouriteLocationAPIView.as_view()),
-    path('report/', location_views.ReportCreateAPIView.as_view()),
 ]
