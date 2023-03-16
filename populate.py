@@ -7,7 +7,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ServoMap.settings")
 
 django.setup()
 
-from apps.locations.models import Location, LocationType
+from django.contrib.auth import get_user_model
+from apps.locations.models import Location, LocationType, Review
+
 
 # 54.405392, 18.657749
 # 54.318575, 18.470982
@@ -17,7 +19,18 @@ MIN_LONGITUDE = 17.60
 MAX_LONGITUDE = 18.599999
 NUM_OF_LOCATIONS = 2000
 
+
+USERS_NUM = 20
+
+REVIEW_COUNT_PER_USER = 400
+REVIEW_MAX_LOCATION_ID = 2000
+REVIEW_MAX_LENGTH = 500
+REVIEW_MIN_RATING = 1
+REVIEW_MAX_RATING = 5
+
+
 fake = Faker()
+UserModel = get_user_model()
 
 LOCATION_TYPES = [
     {
@@ -81,6 +94,42 @@ def get_or_create_types():
     return types
 
 
+def create_user():
+    user_data = {
+        'username': fake.user_name(),
+        'email': fake.email(),
+        'password': fake.password(),
+        'first_name': fake.first_name(),
+        'last_name': fake.last_name(),
+    }
+    return UserModel.objects.create_user(**user_data)
+
+
+def create_review(location, user):
+    text = fake.text(max_nb_chars=REVIEW_MAX_LENGTH)
+    rating = random.randint(REVIEW_MIN_RATING, REVIEW_MAX_RATING)
+    return Review.objects.create(
+        text=text,
+        rating=rating,
+        location=location,
+        user=user,
+    )
+
+
+def create_reviews(user):
+    locations = random.sample(
+        range(REVIEW_MAX_LOCATION_ID), 
+        REVIEW_COUNT_PER_USER
+    )
+    for j in range(REVIEW_COUNT_PER_USER):
+        try:
+            location = Location.objects.get(id=locations[j])
+            review = create_review(location=location, user=user)
+            print(review)
+        except Location.DoesNotExist:
+            pass
+
+
 if __name__ == "__main__":
     types = get_or_create_types()
     for i in range(NUM_OF_LOCATIONS):
@@ -94,3 +143,9 @@ if __name__ == "__main__":
             postal_code=fake.postcode(),
         )
         print(location.name)
+
+    
+    for i in range(USERS_NUM):
+        user = create_user()
+        print(user)
+        create_reviews(user)
